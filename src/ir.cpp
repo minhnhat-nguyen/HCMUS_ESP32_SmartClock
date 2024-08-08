@@ -1,4 +1,4 @@
-#include "lib/IR/IRremote.h"
+#include "lib/IR/IRremote.hpp"
 #include "lib/IR/IRremoteInt.h"
 #include "ir.hpp"
 #define PIN_IR 25
