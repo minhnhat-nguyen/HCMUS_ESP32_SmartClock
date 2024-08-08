@@ -61,7 +61,7 @@ void loop() {
     }
     else {
       alarmSwitch = false;
-    } */
+    }*/
 
    if (digitalRead(PUSHBUTTON) == HIGH) {
      if (millis() - lastButtonUpdate > buttonInterval) {
