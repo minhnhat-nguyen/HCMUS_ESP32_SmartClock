@@ -131,6 +131,16 @@ void refreshDisplay(const DateTime& now, const float& temperature, const float& 
   lcd.noCursor();
 }
 
+void update_NeoPixel(const float& temperature, const float& humidity, const int& co2) {
+  int color = map(temperature, -40, 80, 255, 0);
+  strip.setPixelColor(NEOPIXEL_temp, strip.Color(255 - color, 0, color));
+  color = map(humidity, 0, 100, 0, 255);
+  strip.setPixelColor(NEOPIXEL_humid, strip.Color(255 - color, 0, color));
+  color = map(co2, 0, 5500, 255, 0);
+  strip.setPixelColor(NEOPIXEL_co2, strip.Color(255 - color, 0, color));
+  strip.show();
+}
+
 JsonDocument fetchData() {
   JsonDocument json;
   return json;
@@ -180,13 +190,7 @@ void loop() {
     refreshDisplay(currentTime, temperature, humidity);
     digitalWrite(LED, (presence) ? HIGH : LOW);
     co2 = getPPM();
-    int color = map(temperature, -40, 80, 255, 0);
-    strip.setPixelColor(NEOPIXEL_temp, strip.Color(255 - color, 0, color));
-    color = map(humidity, 0, 100, 0, 255);
-    strip.setPixelColor(NEOPIXEL_humid, strip.Color(255 - color, 0, color));
-    color = map(co2, 0, 5500, 255, 0);
-    strip.setPixelColor(NEOPIXEL_co2, strip.Color(255 - color, 0, color));
-    strip.show();
+    update_NeoPixel(temperature, humidity, co2);
     if (++cycle == lcdRefreshCycle) {
       cycle = 0;
       lcd.clear();
