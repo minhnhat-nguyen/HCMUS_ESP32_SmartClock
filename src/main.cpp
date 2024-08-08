@@ -2,8 +2,8 @@
 #include <Adafruit_NeoPixel.h>
 #include <WiFi.h>
 #include <DHT.h>
-#include "IR/IRremote.hpp"
-#include "IR/IRremoteInt.h"
+#include "lib/IR/IRremote.hpp"
+#include "lib/IR/IRremoteInt.h"
 
 #include "wifi.hpp"
 #include "screen.hpp"
