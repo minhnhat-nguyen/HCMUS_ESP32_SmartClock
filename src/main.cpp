@@ -4,13 +4,16 @@
 #include "sensors.hpp"
 #include "mqtt.hpp"
 #include "neopixel.hpp"
-#include "ir.hpp"
+#include "lib/IR/IRremote.h"
+#include "lib/IR/IRremoteInt.h"
 #include "settings.hpp"
 
 #define PUSHBUTTON 16
 #define BUZZER 23
 #define LED 32
+#define PIN_IR 25
 
+IRsend irsend;
 int lastButtonUpdate = 0;
 bool alarmSwitch = false;
 decode_type_t currentBrand = SONY;
@@ -26,6 +29,30 @@ void playAlarm() {
     noTone(BUZZER);
   }
 }
+
+void sendIR(decode_type_t brand)
+{
+  analogWrite(PIN_IR, 255);
+  switch (brand) {
+    case SAMSUNG:
+      irsend.sendSAMSUNG(0xE0E040BF, 32);
+      break;
+    case LG:
+      irsend.sendLG(0x88, 32, 3);
+      break;
+    case SONY:
+      irsend.sendSony(0xa90, 3, 3);
+      break;
+    case PANASONIC:
+      irsend.sendPanasonic(0x4004, 16, 3);
+      break;
+    case SHARP:
+      irsend.sendSharp(0x40, 16, 3);
+      break;
+  }
+  analogWrite(PIN_IR, 0);
+}
+
 
 void setup() {
   Serial.begin(9600);
@@ -45,7 +72,7 @@ void setup() {
   initSensors();
   initRTC();
   initNeoPixel();
-  initIR();
+  irsend.begin(PIN_IR);
   Settings::instance().setTimeZone(830);
 }
 
