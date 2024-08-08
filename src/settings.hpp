@@ -18,7 +18,7 @@ public:
   void setTimeZone(int timeZone);
 
 private:
-  Settings() {}
+  Settings();
 
   int _alarm;
   int _timeZone;

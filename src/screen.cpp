@@ -1,4 +1,5 @@
 #include "screen.hpp"
+#include "settings.hpp"
 #include <LiquidCrystal_I2C.h>
 
 LiquidCrystal_I2C lcd(0x27, 20, 4);
@@ -13,7 +14,7 @@ void initDisplay()
 }
 
 uint32_t lastClear = 0;
-void refreshDisplay(const DateTime &timestamp, const SensorData &sensorData)
+void refreshDisplay(DateTime timestamp, const SensorData &sensorData)
 {
   auto now = millis();
   if (now - lastClear > 5000)
@@ -21,6 +22,12 @@ void refreshDisplay(const DateTime &timestamp, const SensorData &sensorData)
     lcd.clear();
     lastClear = now;
   }
+  int timeZone = Settings::instance().timeZone();
+  TimeSpan adjust(0, abs(timeZone) / 100, abs(timeZone % 100), 0);
+  if (timeZone > 0)
+    timestamp = timestamp + adjust;
+  else 
+    timestamp = timestamp - adjust;
   lcd.setCursor(0, 0);
   lcd.print(daysOfTheWeek[timestamp.dayOfTheWeek()]);
   lcd.print(" ");

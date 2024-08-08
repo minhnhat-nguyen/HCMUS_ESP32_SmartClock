@@ -5,6 +5,7 @@
 #include "mqtt.hpp"
 #include "neopixel.hpp"
 #include "ir.hpp"
+#include "settings.hpp"
 
 #define PUSHBUTTON 16
 #define BUZZER 23
@@ -45,6 +46,7 @@ void setup() {
   initRTC();
   initNeoPixel();
   initIR();
+  Settings::instance().setTimeZone(830);
 }
 
 SensorData data{
