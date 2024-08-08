@@ -9,7 +9,7 @@ Preferences prefs;
 Settings::Settings()
 {
   prefs.begin("settings");
-  _alarm = prefs.getInt(KEY_ALARM, -1);
+  _alarm = prefs.getInt(KEY_ALARM, 2248);
   _timeZone = prefs.getInt(KEY_TIMEZONE, 700);
 }
 

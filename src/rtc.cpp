@@ -20,6 +20,7 @@ DateTime readRTC()
   {
     ntp.update();
     rtc.adjust(DateTime(ntp.getEpochTime()));
+    lastCheck = now;
   }
   return now;
 }

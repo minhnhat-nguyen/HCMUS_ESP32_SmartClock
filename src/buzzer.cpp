@@ -39,11 +39,9 @@ void checkAlarmTime(DateTime currentTime) {
         currentTime = currentTime + adjust;
     else 
         currentTime = currentTime - adjust;
-    if (currentTime.hour() == alarm / 100 && currentTime.minute() == alarm % 100) {
-        if (!_alarmSwitch) {
-            _alarmSwitch = true;
-            _playAlarm();
-        }
+    if (currentTime.hour() * 100 + currentTime.minute() == alarm && !_alarmSwitch) {
+        _playAlarm();
+        _alarmSwitch = true;
     }
     else {
         _alarmSwitch = false;
