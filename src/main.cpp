@@ -1,7 +1,3 @@
-#include <SPI.h>
-#include <Adafruit_NeoPixel.h>
-#include <WiFi.h>
-#include <DHT.h>
 #include "IR/IRremote.hpp"
 #include "IR/IRremoteInt.h"
 
@@ -15,7 +11,6 @@
 #define DHT_PIN 14
 #define PUSHBUTTON 16
 #define BUZZER 23
-
 
 #define LED 32
 #define IR 25
@@ -34,7 +29,6 @@ int lastButtonUpdate = 0;
 bool alarmSwitch = false;
 decode_type_t currentBrand = SONY;
 
-char daysOfTheWeek[7][10] = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
 DateTime alarmTime = DateTime("2000-00-00T16:10:00");
 
 void playAlarm() {
