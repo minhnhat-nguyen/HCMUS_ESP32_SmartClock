@@ -1,30 +1,15 @@
-#include "lib/IR/IRremote.hpp"
-#include "lib/IR/IRremoteInt.h"
-
 #include "wifi.hpp"
 #include "screen.hpp"
 #include "rtc.hpp"
 #include "sensors.hpp"
 #include "mqtt.hpp"
 #include "neopixel.hpp"
+#include "ir.hpp"
 
-#define DHT_PIN 14
 #define PUSHBUTTON 16
 #define BUZZER 23
-
 #define LED 32
-#define IR 25
 
-const int interval = 1000;
-const int buttonInterval = 200;
-const int lcdRefreshCycle = 60;
-
-String packedData;
-DateTime currentTime;
-IRsend irsend(IR);
-
-int cycle = 0;
-int lastUpdate = 0;
 int lastButtonUpdate = 0;
 bool alarmSwitch = false;
 decode_type_t currentBrand = SONY;
@@ -41,28 +26,6 @@ void playAlarm() {
   }
 }
 
-void sendIR() {
-  analogWrite(IR, 255);
-  switch (currentBrand) {
-    case SAMSUNG:
-      irsend.sendSAMSUNG(0xE0E040BF, 32);
-      break;
-    case LG:
-      irsend.sendLG(0x88, 32, 3);
-      break;
-    case SONY:
-      irsend.sendSony(0xa90, 3, 3);
-      break;
-    case PANASONIC:
-      irsend.sendPanasonic(0x4004, 16, 3);
-      break;
-    case SHARP:
-      irsend.sendSharp(0x40, 16, 3);
-      break;
-  }
-  analogWrite(IR, 0);
-}
-
 void setup() {
   Serial.begin(9600);
 
@@ -73,7 +36,7 @@ void setup() {
   ledcAttachPin(BUZZER, 0);
   Wire.begin();
 
-  pinMode(LED, OUTPUT); 
+  pinMode(LED, OUTPUT);
   pinMode(PUSHBUTTON, INPUT);
   pinMode(BUZZER, OUTPUT);
 
@@ -81,6 +44,7 @@ void setup() {
   initSensors();
   initRTC();
   initNeoPixel();
+  initIR();
 }
 
 SensorData data{
@@ -97,21 +61,6 @@ void loop() {
   sendSensorData(timestamp, data);
   digitalWrite(LED, data.presence);
   updateNeoPixel(data);
-  // if (millis() - lastUpdate > interval) {
-  //   currentTime = rtc.now();
-  //   temperature = dht.readTemperature();
-  //   humidity = dht.readHumidity();
-  //   lastUpdate = millis();
-  //   presence = digitalRead(PIR_PIN) == HIGH;
-  //   refreshDisplay(currentTime, temperature, humidity);
-  //   digitalWrite(LED, (presence) ? HIGH : LOW);
-  //   update_NeoPixel(temperature, humidity, co2);
-  //   if (++cycle == lcdRefreshCycle) {
-  //     cycle = 0;
-  //     lcd.clear();
-  //     Serial.println(packData(currentTime, temperature, humidity, digitalRead(PIR_PIN) == HIGH));
-  //   }
-  // }
 
   // if (currentTime.hour() == alarmTime.hour() && currentTime.minute() == alarmTime.minute()) {
   //   if (!alarmSwitch) {
