@@ -45,3 +45,4 @@ void sendSensorData(const DateTime& timestamp, const SensorData& data)
   serializeJson(doc, jsonData);
   client.publish(TOPIC_SENSORS, jsonData.c_str());
 }
+

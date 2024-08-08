@@ -1,5 +1,4 @@
 #pragma once
-
 class Settings
 {
 public:
@@ -19,7 +18,6 @@ public:
 
 private:
   Settings();
-
   int _alarm;
   int _timeZone;
 };
