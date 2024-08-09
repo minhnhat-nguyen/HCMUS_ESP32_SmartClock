@@ -23,7 +23,6 @@ void initRTC()
   updateNTP();
   unsigned long epoch = ntp.getEpochTime();
   rtc.adjust(DateTime(epoch));
-  Serial.println(epoch);
   lastCheck = rtc.now();
 }
 
