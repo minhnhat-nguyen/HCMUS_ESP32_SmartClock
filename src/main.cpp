@@ -31,13 +31,11 @@ SensorData data{
   .presence = false
 };
 
-
 void setup() {
   Serial.begin(9600);
 
   connectWifi();
   connectMqtt();
-
 
   Wire.begin();
 
@@ -54,6 +52,7 @@ void setup() {
 }
 
 void loop() {
+  updateMqtt();
   readSensors(data);
   auto timestamp = readRTC();
   refreshDisplay(timestamp, data);
