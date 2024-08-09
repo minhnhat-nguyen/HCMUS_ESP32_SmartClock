@@ -36,16 +36,16 @@ void checkAlarmTime(DateTime currentTime) {
         return;
     lastCheckAlarm = now;
     int alarm = Settings::instance().alarm();
-    if (alarm == -1) {
+    if (alarm == -1)
         return;
-    }
     auto& adjust = Settings::instance().timeZoneAdjustment();
     if (adjust.negative)
         currentTime = currentTime - adjust.offset;
     else 
         currentTime = currentTime + adjust.offset;
-    if (currentTime.hour() * 100 + currentTime.minute() == alarm && !_alarmSwitch) {
-        _playAlarm();
+    if (currentTime.hour() * 100 + currentTime.minute() == alarm) {
+        if (!_alarmSwitch)
+            _playAlarm();
         _alarmSwitch = true;
     }
     else {
