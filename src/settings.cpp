@@ -15,6 +15,7 @@ Settings::Settings()
   prefs.begin("settings");
   _alarm = prefs.getInt(KEY_ALARM, -1);
   _timeZone = prefs.getInt(KEY_TIMEZONE, 700);
+  _setTimeZoneAdjustment();
   _brand = static_cast<Brand>(prefs.getInt(KEY_BRAND));
 }
 
@@ -37,7 +38,19 @@ int Settings::timeZone() const
 void Settings::setTimeZone(int timeZone)
 {
   _timeZone = timeZone;
+  _setTimeZoneAdjustment();
   prefs.putInt(KEY_TIMEZONE, timeZone);
+}
+
+const TimeZoneAdjustment& Settings::timeZoneAdjustment() const
+{
+  return _timeZoneAdjustment;
+}
+
+void Settings::_setTimeZoneAdjustment()
+{
+  _timeZoneAdjustment.negative = _timeZone < 0;
+  _timeZoneAdjustment.offset = TimeSpan(0, abs(_timeZone) / 100, abs(_timeZone % 100), 0);
 }
 
 Brand Settings::brand() const

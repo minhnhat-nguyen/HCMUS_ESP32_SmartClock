@@ -1,6 +1,13 @@
 #pragma once
 
 #include "ir.hpp"
+#include <RTClib.h>
+
+struct TimeZoneAdjustment
+{
+  TimeSpan offset;
+  bool negative;
+};
 
 class Settings
 {
@@ -19,12 +26,17 @@ public:
   int timeZone() const;
   void setTimeZone(int timeZone);
 
+  const TimeZoneAdjustment& timeZoneAdjustment() const;
+
   Brand brand() const;
   void setBrand(Brand brand);
 
 private:
   Settings();
+  void _setTimeZoneAdjustment();
+
   int _alarm;
   int _timeZone;
+  TimeZoneAdjustment _timeZoneAdjustment;
   Brand _brand;
 };
