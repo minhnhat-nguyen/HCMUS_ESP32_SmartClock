@@ -10,15 +10,15 @@
 
 #define PUSHBUTTON 16
 #define LED 32
-#define buttonInterval 100
+#define buttonInterval 50
 
 int lastButtonUpdate = 0;
 
 void checkButtonTrigger() {
-  if (digitalRead(PUSHBUTTON) == HIGH) {
-    if (millis() - lastButtonUpdate > buttonInterval) {
+  if (millis() - lastButtonUpdate > buttonInterval) {
+    if (digitalRead(PUSHBUTTON) == HIGH) {
       lastButtonUpdate = millis();
-      toneBuzzer(1000, 100);
+      toneBuzzer(1000, 150);
       sendIR(Settings::instance().brand());
     }
   }
