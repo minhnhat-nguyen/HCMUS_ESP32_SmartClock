@@ -8,14 +8,23 @@ WiFiUDP udp;
 NTPClient ntp(udp, "pool.ntp.org", 0, 0);
 DateTime lastCheck = DateTime("0");
 
+void updateNTP()
+{
+  while (!ntp.update())
+  {
+    Serial.println("Failed to update NTP time");
+  }
+}
+
 void initRTC()
 {
   rtc.begin();
-  ntp.update();
-  rtc.adjust(DateTime(ntp.getEpochTime()));
+  ntp.begin();
+  updateNTP();
+  unsigned long epoch = ntp.getEpochTime();
+  rtc.adjust(DateTime(epoch));
+  Serial.println(epoch);
   lastCheck = rtc.now();
-  Serial.println(ntp.getFormattedTime());
-  Serial.println(lastCheck.timestamp());
 }
 
 
@@ -24,9 +33,10 @@ DateTime readRTC()
   auto now = rtc.now();
   if ((now - lastCheck).days() >= 1)
   {
-    ntp.update();
+    updateNTP();
     rtc.adjust(DateTime(ntp.getEpochTime()));
     lastCheck = now;
+    return rtc.now();
   }
-  return rtc.now();
+  return now;
 }
