@@ -1,4 +1,7 @@
 #pragma once
+
+#include "ir.hpp"
+
 class Settings
 {
 public:
@@ -16,8 +19,12 @@ public:
   int timeZone() const;
   void setTimeZone(int timeZone);
 
+  Brand brand() const;
+  void setBrand(Brand brand);
+
 private:
   Settings();
   int _alarm;
   int _timeZone;
+  Brand _brand;
 };

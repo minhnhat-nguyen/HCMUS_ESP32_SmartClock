@@ -19,7 +19,7 @@ void checkButtonTrigger() {
     if (millis() - lastButtonUpdate > buttonInterval) {
       lastButtonUpdate = millis();
       toneBuzzer(1000, 100);
-      sendIR(Brand::LG);
+      sendIR(Settings::instance().brand());
     }
   }
 }
