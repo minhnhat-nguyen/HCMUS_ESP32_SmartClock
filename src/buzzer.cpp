@@ -8,6 +8,8 @@
 const int melody[] = {262, 294, 330, 349, 392, 440, 494, 523};
 const int noteDurations[] = {500, 500, 500, 500, 500, 500, 500, 500};
 
+const int interval = 500;
+int lastCheckAlarm = 0;
 bool _alarmSwitch = false;
 
 void initBuzzer() {
@@ -29,16 +31,19 @@ void toneBuzzer(int frequency, int duration) {
 }
 
 void checkAlarmTime(DateTime currentTime) {
+    auto now = millis();
+    if (now - lastCheckAlarm < interval)
+        return;
+    lastCheckAlarm = now;
     int alarm = Settings::instance().alarm();
     if (alarm == -1) {
         return;
     }
-    int timeZone = Settings::instance().timeZone();
-    TimeSpan adjust(0, abs(timeZone) / 100, abs(timeZone % 100), 0);
-    if (timeZone > 0)
-        currentTime = currentTime + adjust;
+    auto& adjust = Settings::instance().timeZoneAdjustment();
+    if (adjust.negative)
+        currentTime = currentTime - adjust.offset;
     else 
-        currentTime = currentTime - adjust;
+        currentTime = currentTime + adjust.offset;
     if (currentTime.hour() * 100 + currentTime.minute() == alarm && !_alarmSwitch) {
         _playAlarm();
         _alarmSwitch = true;
