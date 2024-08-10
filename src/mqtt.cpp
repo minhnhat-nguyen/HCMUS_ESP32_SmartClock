@@ -28,18 +28,18 @@ void mqttCallback(const char* topic, byte* payload, unsigned int length)
 
     if (doc.containsKey("timeZone"))
     {
-      Serial.println("Set new timezone");
       settings.setTimeZone(doc["timeZone"].as<int>());
+      Serial.println("Timezone set to: " + String(doc["timeZone"].as<int>()));
     }
     if (doc.containsKey("alarm"))
     {
-      Serial.println("Set new alarm");
       settings.setAlarm(doc["alarm"].as<int>());
+      Serial.println("Alarm set to: " + String(doc["alarm"].as<int>()));
     }
     if (doc.containsKey("brand"))
     {
-      Serial.println("Set new brand");
       settings.setBrand(static_cast<Brand>(doc["brand"].as<int>()));
+      Serial.println("Brand set to: " + String(doc["brand"].as<int>()));
     }
   }
 }
