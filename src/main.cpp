@@ -57,6 +57,7 @@ void loop() {
   auto timestamp = readRTC();
   refreshDisplay(timestamp, data);
   sendSensorData(timestamp, data);
+  sendSettings();
   digitalWrite(LED, data.presence);
   updateNeoPixel(data);
   checkAlarmTime(timestamp);

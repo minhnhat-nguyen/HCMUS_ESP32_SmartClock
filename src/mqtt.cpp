@@ -9,11 +9,14 @@
 #define TOPIC_SENSORS TOPIC_PREFIX "/sensors"
 #define TOPIC_SETTINGS TOPIC_PREFIX "/settings"
 #define TOPIC_SETTINGS_SET TOPIC_PREFIX "/settings/set"
+#define MQTT_SERVER "broker.hivemq.com" 
 
+const int settingsSyncInterval = 1000;
 WiFiClient espClient;
 PubSubClient client(espClient);
 
 uint32_t lastSend = 0;
+uint32_t settingLastSend = 0;
 
 void mqttCallback(const char* topic, byte* payload, unsigned int length)
 {
@@ -41,21 +44,8 @@ void mqttCallback(const char* topic, byte* payload, unsigned int length)
   }
 }
 
-void sendSettings()
-{
-  auto& settings = Settings::instance();
-  JsonDocument doc;
-  doc["timeZone"] = settings.timeZone();
-  doc["alarm"] = settings.alarm();
-  doc["brand"] = static_cast<int>(settings.brand());
-
-  String jsonData;
-  serializeJson(doc, jsonData);
-  client.publish(TOPIC_SETTINGS, jsonData.c_str());
-}
-
 void connectMqtt() {
-  client.setServer("broker.hivemq.com", 1883);
+  client.setServer(MQTT_SERVER, 1883);
   client.setKeepAlive(90);
   String clientId = "TestClientWhatever";
   clientId += String(random(0xffff), HEX);
@@ -103,3 +93,18 @@ void sendSensorData(const DateTime& timestamp, const SensorData& data)
   client.publish(TOPIC_SENSORS, jsonData.c_str());
 }
 
+void sendSettings()
+{
+  if (millis() - settingLastSend < settingsSyncInterval)
+    return;
+  settingLastSend = millis();
+  auto& settings = Settings::instance();
+  JsonDocument doc;
+  doc["timeZone"] = settings.timeZone();
+  doc["alarm"] = settings.alarm();
+  doc["brand"] = static_cast<int>(settings.brand());
+
+  String jsonData;
+  serializeJson(doc, jsonData);
+  client.publish(TOPIC_SETTINGS, jsonData.c_str());
+}
